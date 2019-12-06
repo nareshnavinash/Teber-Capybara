@@ -1,5 +1,0 @@
-Using the default profile...
-[36m@TC_Google_Search[0m
-Feature: Search for a term in google search
-  Entering a term in google search and verifying result page is displayed
-
