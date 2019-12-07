@@ -14,15 +14,36 @@ module Library
     end
 
     def self.new_driver(name)
-      Capybara.register_driver name.to_sym do |app|
-        if $conf['mode'] == "headless" or OS.linux? or ENV['mode'] == "headless"
-          Capybara::Selenium::Driver.new(app, :browser => :chrome, args: ['headless', 'disable-infobars', 'disable-gpu', 'disable-dev-shm-usage', 'no-sandbox'])
-        else
-          Capybara::Selenium::Driver.new(app, :browser => :chrome)
+      
+      case $conf['browser']
+
+      when 'chrome'
+        Capybara.register_driver name.to_sym do |app|
+          if $conf['mode'] == "headless" or OS.linux? or ENV['mode'] == "headless"
+            Capybara::Selenium::Driver.new(app, :browser => :chrome, args: ['headless', 'disable-infobars', 'disable-gpu', 'disable-dev-shm-usage', 'no-sandbox'])
+          else
+            Capybara::Selenium::Driver.new(app, :browser => :chrome)
+          end
         end
+        $drivers << name.to_sym
+        return $drivers.last
+      
+      when 'firefox'
+        # to be added
+
+      when 'ie'
+        # to be added
+
+      when 'edge'
+        # to be added
+
+      when 'safari'
+        # to be added
+
+      else
+        raise ArgumentError, "Specify a proper browser while initiating a driver \n \n#{browser.inspect}"
       end
-      $drivers << name.to_sym
-      return $drivers.last
+
     end
     
     def self.get_drivers_list
@@ -31,6 +52,17 @@ module Library
 
     def self.get_last_driver
       $drivers.last
+    end
+
+    class Screenshot
+      @@path = ""
+      def self.set_path(str_path)
+        @@path = str_path
+      end
+      
+      def self.path
+        return @@path
+      end
     end
 
     # Capybara.current_driver = :webkit

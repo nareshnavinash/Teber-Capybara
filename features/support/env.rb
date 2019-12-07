@@ -91,11 +91,11 @@ After do |scenario|
           d = $drivers
           d.each do |driver_sym|
             Capybara.current_driver = driver_sym
-            file_name = "#{driver_sym.to_s}+#{(Time.now.to_f * 1000).to_i.to_s}+.png"
-            save_screenshot("../../reports/screenshots/#{file_name}")
-            attach_file("#{driver_sym}", "../../reports/screenshots/#{file_name}")
-            Capybara.use_default_driver
+            file_name = "#{driver_sym.to_s}#{(Time.now.to_f * 1000).to_i.to_s}.png"
+            Library::Screenshot.set_path(save_screenshot("#{Dir.pwd}/reports/screenshots/#{file_name}"))
+            scenario.attach_file("#{driver_sym.to_s}", Library::Screenshot)
           end
+          Capybara.use_default_driver
         rescue Exception => e
             puts e.message
         end
